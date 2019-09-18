@@ -11,7 +11,6 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.cleaned_data['username'] = form.cleaned_data.get('email')
-            print(form.cleaned_data)
             form.save()
             username = form.cleaned_data.get('email')
             email = form.cleaned_data.get('email')

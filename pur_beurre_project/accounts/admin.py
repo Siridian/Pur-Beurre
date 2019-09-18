@@ -14,11 +14,12 @@ from accounts.models import User
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    password1 = forms.CharField(label='Mot de passe', widget=forms.PasswordInput)
-    password2 = forms.CharField(
-                                label='Répétez votre mot de passe', 
+    password1 = forms.CharField(label='Mot de passe', 
                                 widget=forms.PasswordInput
-                )
+    )
+    password2 = forms.CharField(label='Répétez votre mot de passe', 
+                                widget=forms.PasswordInput
+    )
 
     class Meta:
         model = User
