@@ -82,7 +82,7 @@ def search(request):
 
     if request.user.is_authenticated:
         context = {
-        "status" : "ok",
+        "status" : "ok connect",
         "base_product": base_product,
         "substitute_list": substitute_list[:6],
         "bookmarked_list": request.user.bookmarks.all()
