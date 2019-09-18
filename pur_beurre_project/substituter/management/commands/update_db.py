@@ -1,0 +1,84 @@
+#! /usr/bin/env python3
+# coding: utf-8
+
+'''This module inserts data from the openfoodfacts api into a database.
+Run it using pipenv manage.py update_db.
+'''
+
+from django.core.management.base import BaseCommand
+
+import requests
+
+from substituter.models import Product, Category
+
+
+accepted_categories = ["boissons", "petits_dejeuners",
+                       "produits_laitiers", "epicerie", "charcuteries"]
+
+class Command(BaseCommand):
+    help = 'Download data from the openfoodfacts api and write it into the database'
+
+    def handle(self, *args, **options):
+        '''Requests the open food facts api and unpacks the obtained data
+        Each valid product (that is, with existing name, grade and categories)
+        is added into the Products Table and linked to related Categories
+        '''
+
+        results = {}
+        results['products'] = []
+
+        for category in accepted_categories:
+            url = '''https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&json=1&tag_0=''' + category
+            products = requests.get(url).json()["products"]
+
+            for product in products:
+                print("product found")
+                if "product_name" in product and "nutrition_grades" in product and "url" in product and "generic_name" in product and "image_url" in product:
+                    categories = [category.strip().lower() for category
+                                  in product["categories"].split(",")]
+                    name = product["product_name"]
+                    grade = product["nutrition_grades"]
+                    link = product["url"]
+                    description = product["generic_name"]
+                    image = product["image_url"]
+                    fats = None
+                    proteins = None
+                    carbohydrates = None
+                    sugars = None
+                    salt = None
+                    fibers = None
+
+                    if product["nutriments"]:
+
+                      if "fat_100g" in product["nutriments"]:
+                          fats = product["nutriments"]["fat_100g"]
+                      if "proteins_100g" in product["nutriments"]:
+                          proteins = product["nutriments"]["proteins_100g"]
+                      if "carbohydrates_100g" in product["nutriments"]:
+                          carbohydrates = product["nutriments"]["carbohydrates_100g"]
+                      if "sugars_100g" in product["nutriments"]:
+                          sugars = product["nutriments"]["sugars_100g"]
+                      if "salt_100g" in product["nutriments"]:
+                          salt = product["nutriments"]["salt_100g"]
+                      if "fibers_100g" in product["nutriments"]:
+                          fibers = product["nutriments"]["fibers_100g"]
+
+                    product = Product.objects.create(name=name,
+                                                     grade=grade,
+                                                     link=link, 
+                                                     description=description, 
+                                                     image=image, 
+                                                     fats=fats, 
+                                                     proteins=proteins, 
+                                                     carbohydrates=carbohydrates, 
+                                                     sugars=sugars, 
+                                                     salt=salt, 
+                                                     fibers=fibers
+                                                    )
+                    print("product created")
+                    for category in categories:                    
+                        cat, boolean = Category.objects.update_or_create(name=category)
+                        print("category created" + category)
+                        product.categories.add(cat)
+
+
