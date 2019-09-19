@@ -5,3 +5,42 @@ body{
 h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans", sans-serif;
 }
+
+*, *::before, *::after {
+  box-sizing: border-size;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  margin: 2rem;
+}
+
+.product {
+  position: relative;
+  width: 300px;
+  height: 200px;
+}
+
+.product-pic {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  object-position: 100% 0%;
+}
+
+p.nutriscore {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #aaa;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  text-align: center;
+  line-height: 2rem;
+  margin: 0;
+  right: -1rem;
+  top: -1rem;
+}

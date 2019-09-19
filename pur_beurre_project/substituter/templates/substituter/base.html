@@ -50,8 +50,7 @@
             <a class="nav-link js-scroll-trigger" href="{% url 'accounts:dashboard' %}"><i class="fas fa-user"></i></a>
           </li>
           <li class="nav-item">
-            <img src="{% static 'substituter/img/carrot_icon.png' %}">
-            <a class="nav-link js-scroll-trigger" href="{% url 'bookmarks:bookmarked' %}"><img href="{% static 'substituter/img/carrot_icon.png' %}"></a>
+            <a class="nav-link js-scroll-trigger" href="{% url 'bookmarks:bookmarked' %}"><img src="{% static 'substituter/img/carrot_icon.png' %}"></a>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt" alt="Déconnexion"></i></a>
@@ -75,8 +74,8 @@
   <footer class="bg-light py-5">
     <div class="container">
       <div class ="row">
-        <a class="col-lg-6 col-sm-6 text-center text-muted" href="{% url 'substituter:legal' %}">Mentions légales</a>
-        <a class="col-lg-6 col-sm-6 text-center text-muted" href="/#contact">Contact</a>
+        <a class="col-lg-6 col-sm-6 text-center text-white" href="{% url 'substituter:legal' %}">Mentions légales</a>
+        <a class="col-lg-6 col-sm-6 text-center text-white" href="/#contact">Contact</a>
       </div>
     </div>
   </footer>
