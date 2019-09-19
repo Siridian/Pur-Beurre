@@ -1,3 +1,7 @@
+'''
+This module contains the various unit tests for the substituter app
+'''
+
 from django.test import TestCase
 from django.test.client import Client
 
@@ -8,8 +12,11 @@ from accounts.models import User
 # Models
 
 class TestModels(TestCase):
+    #This class tests the product and category models
 
     def test_product(self):
+        #tests that product's attributes are of the correct type when created
+
         product = Product.objects.create(
         name = "testname",
         grade = "a",
@@ -42,6 +49,8 @@ class TestModels(TestCase):
         self.assertTrue(isinstance(product.categories.all()[0], Category))
 
     def test_category(self):
+        #tests that category's name is of the correct type when created
+
         cat = Category.objects.create(name="test")
         self.assertTrue(isinstance(cat, Category))
         self.assertEqual(type(cat.name), str)
@@ -49,17 +58,23 @@ class TestModels(TestCase):
 # Views
 
 class TestViewIndex(TestCase):
-    
+    #This class tests the Index view
+
     def test_index_200(self):
+        #tests that index view returns a 200 code
+
         response = self.client.get("/")
 
         self.assertEqual(response.status_code, 200)
 
 
 class TestViewSearch(TestCase):
+    #This class tests the Search view
 
     @classmethod 
     def setUpTestData(cls):
+        #sets up various products and categories, as well as a user
+
         cata = Category.objects.create(name="cata")
         catb = Category.objects.create(name="catb")
         catc = Category.objects.create(name="catc")
@@ -85,6 +100,8 @@ class TestViewSearch(TestCase):
         u.bookmarks.add(producte)
 
     def test_search_200(self):
+        #tests that search view returnes 200 code with proper query
+
         response = self.client.get("/substituter/search/", 
                                    {'query': 'gamma+beta'}, 
                                    follow=True
@@ -93,6 +110,8 @@ class TestViewSearch(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_search_find_base_product(self):
+        #tests that search view finds most relevant product based on query
+
         response = self.client.get("/substituter/search/",
                                    {'query': 'gamma+beta'}
         )
@@ -100,6 +119,8 @@ class TestViewSearch(TestCase):
         self.assertEqual(response.context['base_product'].name, "beta gamma")
 
     def test_search_find_no_base_product(self):
+        #tests that search view returns error code when no product matches query
+
         response = self.client.get("/substituter/search/",
                                    {'query': 'epsilon'}
         )
@@ -107,6 +128,11 @@ class TestViewSearch(TestCase):
         self.assertEqual(response.context['status'], "error")
 
     def test_search_correct_substitute_order(self):
+        """
+        tests that the subtitutes proposed for a given product are of better
+        grade, and sorted according to category relevance
+        """
+
         response = self.client.get("/substituter/search/",
                                    {'query': 'gamma+beta'}
         )
@@ -117,6 +143,8 @@ class TestViewSearch(TestCase):
         )
 
     def test_search_gets_boomkarks(self):
+        #tests that search view returns request's user's bookmarks
+
         c = Client()     
         c.login(email='testmail', password='testpass')
 
@@ -128,30 +156,42 @@ class TestViewSearch(TestCase):
 
 
 class TestViewDetail(TestCase):
+    #This class tests the Detail view
 
     @classmethod 
     def setUpTestData(cls):
+        #sets up a single product, with id 1 (for easier querying)
+
         Product.objects.create(id = 1, name = "testname")
 
     def test_detail_valid_id(self):
+        #tests that detail view returns a 200 code for an existing product
+
         response = self.client.get("/substituter/detail/1", follow=True)
 
         self.assertEqual(response.status_code, 200)
 
     def test_detail_invalid_id(self):
+        #tests that detail view returns a 404 code for an non-existing product
+
         response = self.client.get("/substituter/detail/2", follow=True)
 
         self.assertEqual(response.status_code, 404)
 
     def test_detail_correct_context(self):
+        #tests that detail view sends product's informations through context
+
         response = self.client.get("/substituter/detail/1", follow=True)
 
         self.assertEqual(response.context['product'].name, "testname")
 
 
 class TestViewLegal(TestCase):
+    #This class tests the Legal view
 
     def test_legal_200(self):
+        #tests that legal view returns a 200 code
+
         response = self.client.get("/substituter/legal/")
 
         self.assertEqual(response.status_code, 200)

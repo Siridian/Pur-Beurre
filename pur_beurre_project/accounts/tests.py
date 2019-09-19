@@ -1,3 +1,7 @@
+'''
+This module contains the various unit tests for the accounts app
+'''
+
 from django.test import TestCase
 from django.test.client import Client
 
@@ -7,7 +11,11 @@ from substituter.models import Product
 # Models
 
 class TestUserModel(TestCase):
+    #This class tests the user model
+
     def test_attributes(self):
+        #tests that user's attributes are of the correct type when created
+
         user = User.objects.create(email='test@user.model',
                                    first_name="usermodelname",
                                    password="testpass"
@@ -25,7 +33,11 @@ class TestUserModel(TestCase):
 # Views
 
 class TestViewSignup(TestCase):
+    #This class tests the Signup view
+
     def test_signup_works(self):
+        #tests that a user is properly created through signup form
+
         response = self.client.post("/accounts/signup/", {
             'email': 'test@signup.works',
             'first_name': 'testworks',
@@ -39,6 +51,10 @@ class TestViewSignup(TestCase):
         )
 
     def test_signup_redirects(self):
+        '''
+        tests that a recently created user is redirected to index page
+        and is logged in after signing up
+        '''
 
         response = self.client.post("/accounts/signup/", {
             'email': 'test@signup.redirects',
@@ -56,6 +72,8 @@ class TestViewSignup(TestCase):
         self.assertIn('_auth_user_id', self.client.session)
 
     def test_signup_fails(self):
+        #test that no user is created and the page reloaded if form is invalid
+
         response = self.client.post("/accounts/signup/", {
             'email': 'testmailsignupredirects',
             'first_name': 'testfn',
@@ -64,18 +82,24 @@ class TestViewSignup(TestCase):
             }
         )
 
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)       
         
 
 class TestViewDashboard(TestCase):
+    #This Class tests the Dashboard view
 
     @classmethod 
     def setUpTestData(cls):
+        #sets up a user
+
         u = User.objects.create(email="testmail")
         u.set_password('testpass')
         u.save()
     
     def test_dashboard_no_user_redirect(self):
+        #tests that bookmarked view redirects anonymous users to login page
+
         response = self.client.get("/accounts/dashboard", follow=True)
 
         self.assertRedirects(response, 
@@ -85,6 +109,8 @@ class TestViewDashboard(TestCase):
         )
 
     def test_dashboard_user_200(self):
+        #tests that bookmarked view returns a 200 code for logged in users
+
         c = Client()     
         c.login(email='testmail', password='testpass')
 
@@ -93,6 +119,8 @@ class TestViewDashboard(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_dashboard_gets_user(self):
+        #tests that bookmarked view returns logged user's email in context
+
         c = Client()     
         c.login(email='testmail', password='testpass')
 
