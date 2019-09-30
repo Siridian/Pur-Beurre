@@ -34,7 +34,7 @@ p.nutriscore {
 }
 
 .bottomdiv {
-    position: absolute;
+    position: relative;
     bottom: 0;
 }
 
@@ -43,7 +43,8 @@ p.nutriscore {
 }
 
 .bg-img {
-    background-image: url("../img/bg-masthead.jpg");
+    background-image: linear-gradient(rgba(92, 77, 66, 0.8) 0px, rgba(92, 77, 66, 0.8) 100%), url("../img/bg-masthead.jpg");
+    background-size: cover;
 }
 
 .bg-primary {
@@ -52,4 +53,30 @@ p.nutriscore {
 
 footer.bg-light {
     background-color: #C45525!important;
+}
+
+.btn {
+    background-color: #DE9440;
+    border-color: #DE9440;
+}
+
+hr.divider {
+    border-color: #C45525;
+}
+
+.nav-form input {
+    height: 60%
+}
+
+.nav-form button {
+    font-size: 0.8em;
+    padding: 1px 2px;
+}
+
+#mainNav .navbar-brand, #mainNav .navbar-nav .nav-item .nav-link, .btn{
+    font-family: "Scope One", sans-serif;
+}
+
+.registration-form{
+    color: white;
 }

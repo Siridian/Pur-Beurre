@@ -43,7 +43,13 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto my-2 my-lg-0">
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/">Recherche</a>
+            <form class="form-inline nav-form" action="{% url 'substituter:search' %}" method="get">
+              <div class="form-group">
+                <input type="text" name="query" value="" id="name">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Chercher</button>
+            </form>
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item">
