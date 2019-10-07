@@ -1,0 +1,18 @@
+language: python
+python:
+  - '3.5'
+
+before_script:
+  - pipenv install
+
+env: DJANGO_SETTINGS_MODULE="pur_beurre_project.settings.travis"
+
+services:
+  - postgresql
+
+script:
+  - ./manage.py test
+
+  branches:
+  only:
+    - master
