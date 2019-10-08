@@ -9,6 +9,9 @@ from django.contrib.sessions.models import Session
 
 from .models import Product, Category
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 def index(request):
     #Displays home page
@@ -95,6 +98,10 @@ def search(request):
         "substitute_list": substitute_list[:6],
         "bookmarked_list": []
         }
+
+    logger.info('New search', exc_info=True, extra={
+        'request': request,
+    })
 
     return render(request, 'substituter/search.html', context)
 

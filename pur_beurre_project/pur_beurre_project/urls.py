@@ -20,7 +20,11 @@ from django.urls import path, re_path
 
 from substituter import views
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
 urlpatterns = [
+    path('sentry-debug/', trigger_error),
     re_path(r'^$', views.index, name="index"), 
     path(
         r'substituter/', 

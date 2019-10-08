@@ -17,6 +17,8 @@ dj-database-url = "*"
 coverage = "*"
 django-extensions = "*"
 pytest = "*"
+sentry-sdk = "==0.12.3"
+raven = "*"
 
 [requires]
 python_version = "3.6"
