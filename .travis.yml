@@ -12,7 +12,7 @@ services:
   - postgresql
 
 script:
-  - pipenv run python pur_beurre_project/manage.py test
+  - cd pur_beurre_project && pipenv run python manage.py test
 
 branches:
   only:
