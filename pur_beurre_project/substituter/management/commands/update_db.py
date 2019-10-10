@@ -6,6 +6,8 @@ Run it using pipenv manage.py update_db.
 '''
 
 from django.core.management.base import BaseCommand
+from datetime import date, datetime
+import json
 
 import requests
 
@@ -24,6 +26,8 @@ class Command(BaseCommand):
         is added into the Products Table and linked to related Categories
         '''
 
+        data = []
+
         results = {}
         results['products'] = []
 
@@ -32,10 +36,10 @@ class Command(BaseCommand):
             products = requests.get(url).json()["products"]
 
             for product in products:
-                print("product found")
-                if "product_name" in product and "nutrition_grades" in product and "url" in product and "generic_name" in product and "image_url" in product:
+                if "product_name" in product and "nutrition_grades" in product and "url" in product and "generic_name" in product and "image_url" in product and "code" in product:
                     categories = [category.strip().lower() for category
                                   in product["categories"].split(",")]
+                    barcode = product['code']
                     name = product["product_name"]
                     grade = product["nutrition_grades"]
                     link = product["url"]
@@ -63,7 +67,9 @@ class Command(BaseCommand):
                       if "fibers_100g" in product["nutriments"]:
                           fibers = product["nutriments"]["fibers_100g"]
 
-                    product = Product.objects.create(name=name,
+                    product, created = Product.objects.update_or_create(
+                                                     barcode=barcode,
+                                                     name=name,
                                                      grade=grade,
                                                      link=link, 
                                                      description=description, 
@@ -75,10 +81,22 @@ class Command(BaseCommand):
                                                      salt=salt, 
                                                      fibers=fibers
                                                     )
-                    print("product created")
-                    for category in categories:                    
-                        cat, boolean = Category.objects.update_or_create(name=category)
-                        print("category created" + category)
-                        product.categories.add(cat)
+                    if created:
+                        data.append("product #{} created".format(barcode))
+                    else:
+                        data.append("product #{} updated".format(barcode))
 
+
+                    for category in categories:                    
+                        cat, created = Category.objects.update_or_create(name=category)
+                        product.categories.add(cat)
+                        if created:
+                            data.append("category {} created".format(category))
+
+
+        with open('update_log_{}.json'.format(date.today()), 'w') as outfile:
+            outfile.write(str(datetime.now()))
+            for line in data:
+                outfile.write('\n') 
+                json.dump(line, outfile) 
 

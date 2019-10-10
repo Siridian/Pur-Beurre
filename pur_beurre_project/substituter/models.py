@@ -16,6 +16,7 @@ class Product(models.Model):
     informations about the product.
     Finally, each product is linked to at least one category.
     '''
+    barcode = models.BigIntegerField(unique=True, null=True)
     name = models.CharField(max_length=100)
     grade = models.CharField(max_length=1)
     link = models.URLField(max_length=255)
