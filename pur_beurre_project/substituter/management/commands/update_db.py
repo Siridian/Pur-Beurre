@@ -8,6 +8,7 @@ Run it using pipenv manage.py update_db.
 from django.core.management.base import BaseCommand
 from datetime import date, datetime
 import json
+import os
 
 import requests
 
@@ -93,8 +94,7 @@ class Command(BaseCommand):
                         if created:
                             data.append("category {} created".format(category))
 
-
-        with open('update_log_{}.json'.format(date.today()), 'w') as outfile:
+        with open('{}/update_log_{}.json'.format(os.environ.get('LOGS_PATH'),date.today()), 'w') as outfile:
             outfile.write(str(datetime.now()))
             for line in data:
                 outfile.write('\n') 

@@ -7,11 +7,9 @@ food product.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.sessions.models import Session
 
+from sentry_sdk import capture_message
+
 from .models import Product, Category
-
-import logging
-
-logger = logging.getLogger(__name__)
 
 def index(request):
     #Displays home page
@@ -99,9 +97,7 @@ def search(request):
         "bookmarked_list": []
         }
 
-    logger.info('New search', exc_info=True, extra={
-        'request': request,
-    })
+    capture_message('New search : ' + request.GET.get("query"))
 
     return render(request, 'substituter/search.html', context)
 

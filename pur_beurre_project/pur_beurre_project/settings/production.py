@@ -16,8 +16,8 @@ sentry_sdk.init(
     integrations=[DjangoIntegration(), sentry_logging]
 )
 
-SECRET_KEY = 'Y,."IT1.`-\rOB\x0c~irF%+`rP6'
-DEBUG = True
+SECRET_KEY = 'kjĝ284"kbi!!ttr45ugyigv'
+DEBUG = False
 ALLOWED_HOSTS = ['134.209.183.242']
 
 DATABASES = {
